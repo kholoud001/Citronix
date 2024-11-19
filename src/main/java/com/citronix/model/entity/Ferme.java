@@ -32,8 +32,8 @@ public class Ferme {
     @NotNull
     private LocalDate dateCreation;
 
-    @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL)
-    private List<Champ> champs = new ArrayList<>();  
+    @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Champ> champs = new ArrayList<>();
 
     public boolean isSuperficieValid() {
         // Vérifie si la somme des superficies des champs est inférieure à celle de la ferme

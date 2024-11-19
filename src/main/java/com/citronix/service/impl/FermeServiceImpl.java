@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class FermeServiceImpl implements FermeService {
     @Autowired
@@ -26,4 +28,27 @@ public class FermeServiceImpl implements FermeService {
         }
         return fermeRepository.save(ferme);
     }
+
+
+    @Override
+    public Optional<Ferme> getFermeById(Long id) {
+        return fermeRepository.findById(id);
+    }
+
+    @Override
+    public Ferme updateFerme(Long id, Ferme ferme) {
+        Optional<Ferme> optionalFerme = fermeRepository.findById(id);
+
+        if (optionalFerme.isPresent()) {
+            Ferme existingFerme = optionalFerme.get();
+            existingFerme.setNom(ferme.getNom());
+            existingFerme.setLocalisation(ferme.getLocalisation());
+            existingFerme.setSuperficie(ferme.getSuperficie());
+            existingFerme.setDateCreation(ferme.getDateCreation());
+            return fermeRepository.save(existingFerme);
+        } else {
+            throw new RuntimeException("Ferme not found");
+        }
+    }
+
 }

@@ -10,20 +10,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/fermes")
 public class FermeController {
     @Autowired
     private FermeService fermeService;
 
-    @Autowired
-    private ChampService champService;
-
-
-
     @PostMapping
     public Ferme createFerme(@RequestBody Ferme ferme) {
         return fermeService.createFerme(ferme);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Ferme> getFerme(@PathVariable Long id) {
+        Ferme ferme = fermeService.getFermeById(id)
+                .orElseThrow(() -> new RuntimeException("Ferme not found"));
+        return ResponseEntity.ok(ferme);
+    }
+
+    @PutMapping("/{id}")
+    public Ferme updateFerme(@PathVariable Long id, @Valid @RequestBody Ferme ferme) {
+        return fermeService.updateFerme(id, ferme);
     }
 
 }
