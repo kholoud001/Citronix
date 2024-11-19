@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,5 +28,11 @@ public class Champ {
     private Ferme ferme;
 
     @OneToMany(mappedBy = "champ", cascade = CascadeType.ALL)
-    private List<Arbre> arbres;
+    private List<Arbre> arbres = new ArrayList<>();
+
+
+    public boolean isDensiteArbresValid() {
+        // Vérifie la densité des arbres dans le champ (100 arbres par hectare)
+        return arbres.size() <= superficie * 100;
+    }
 }
