@@ -35,6 +35,9 @@ public class Champ {
     @JoinColumn(name = "ferme_id", nullable = false)
     private Ferme ferme;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "champ", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Recolte> recoltes = new ArrayList<>();
 
 
     public boolean isDensiteArbresValid() {

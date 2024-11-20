@@ -52,10 +52,14 @@ public class ArbreServiceImpl implements ArbreService {
             throw new IllegalArgumentException("La densité des arbres dépasse la limite autorisée.");
         }
 
+
+        if (!arbre.estProductif()) {
+            throw new IllegalArgumentException("Cet arbre a dépassé sa durée de vie maximale (20 ans).");
+        }
+
         // Ajouter l'arbre au champ
         champ.getArbres().add(arbre);
 
-        // Sauvegarder le champ et l'arbre
 //        champRepository.save(champ);
         arbre = arbreRepository.save(arbre);
 
@@ -64,14 +68,11 @@ public class ArbreServiceImpl implements ArbreService {
 
     @Override
     public ArbreDTO getArbre(Long arbreId) {
-        // Récupère l'arbre par son ID
         Arbre arbre = arbreRepository.findById(arbreId)
                 .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé"));
 
-        // Calcule et définit l'âge avant de mapper en DTO
         arbre.setAge(arbre.calculerAge());
 
-        // Retourne le DTO
         return arbreMapper.toDTO(arbre);
     }
 
