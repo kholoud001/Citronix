@@ -32,23 +32,35 @@ public class Ferme {
     @NotNull
     private LocalDate dateCreation;
 
+
+
     @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Champ> champs = new ArrayList<>();
 
+
     public boolean isSuperficieValid() {
         // Vérifie si la somme des superficies des champs est inférieure à celle de la ferme
-        double totalSuperficieChamps = champs.stream().mapToDouble(Champ::getSuperficie).sum();
+        double totalSuperficieChamps = 0.0;
+        for (Champ champ : champs) {
+            totalSuperficieChamps += champ.getSuperficie();
+        }
         return totalSuperficieChamps < this.superficie;
     }
 
     public boolean isDensiteArbresValid() {
         // Vérifie si la densité des arbres est respectée (100 arbres par hectare)
-        return champs.stream().allMatch(champ -> champ.isDensiteArbresValid());
+        for (Champ champ : champs) {
+            if (!champ.isDensiteArbresValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isChampLimitValid() {
         // Vérifie si le nombre maximal de champs est respecté (10 champs max par ferme)
         return champs.size() <= 10;
     }
+
 }
 
