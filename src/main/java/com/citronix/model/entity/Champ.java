@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class Champ {
     @DecimalMin(value = "0.1", message = "La superficie doit être au minimum de 0.1 hectare.")
     private Double superficie;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "ferme_id", nullable = false)
     private Ferme ferme;

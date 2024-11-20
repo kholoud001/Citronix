@@ -1,10 +1,16 @@
 package com.citronix.service.impl;
 
+import com.citronix.dto.ChampDTO;
+import com.citronix.mapper.ChampMapper;
 import com.citronix.model.entity.Champ;
+import com.citronix.model.entity.Ferme;
 import com.citronix.repository.ChampRepository;
+import com.citronix.repository.FermeRepository;
 import com.citronix.service.ChampService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ChampServiceImpl implements ChampService {
@@ -12,9 +18,49 @@ public class ChampServiceImpl implements ChampService {
     @Autowired
     private ChampRepository champRepository;
 
-    @Override
-    public Champ saveChamp(Champ champ) {
-        return champRepository.save(champ);
-    }
+    @Autowired
+    private FermeRepository fermeRepository;
 
+
+    @Autowired
+    private ChampMapper champMapper;
+
+
+    @Override
+    public ChampDTO createChamp(Long fermeId, ChampDTO champDTO) {
+        Optional<Ferme> fermeOptional = fermeRepository.findById(fermeId);
+
+        if (fermeOptional.isPresent()) {
+            Ferme ferme = fermeOptional.get();
+
+            // Validate the number of fields (maximum 10)
+            if (ferme.getChamps().size() >= 10) {
+                throw new IllegalStateException("La ferme ne peut contenir plus de 10 champs.");
+            }
+
+            // Validate the total surface area of the fields (maximum 50% of the farm's total surface area)
+            double totalFieldArea = ferme.getChamps().stream()
+                    .mapToDouble(Champ::getSuperficie)
+                    .sum();
+            System.out.println("totalFieldArea => "+totalFieldArea);
+            if (champDTO.getSuperficie() + totalFieldArea > ferme.getSuperficie() / 2) {
+                throw new IllegalStateException("La superficie totale des champs ne peut pas dépasser 50% de la superficie de la ferme.");
+            }
+
+            // Validate the minimum and maximum surface area of the field
+            if (champDTO.getSuperficie() < 0.1) {
+                throw new IllegalStateException("La superficie minimale d'un champ est de 0.1 hectare.");
+            }
+
+            // Create the Champ entity from the DTO
+            Champ champ = champMapper.toEntity(champDTO);
+            champ.setFerme(ferme);
+            Champ savedChamp = champRepository.save(champ);
+
+            // Return the saved Champ as DTO
+            return champMapper.toDTO(savedChamp);
+        } else {
+            throw new IllegalStateException("Ferme non trouvée avec l'ID " + fermeId);
+        }
+    }
 }
