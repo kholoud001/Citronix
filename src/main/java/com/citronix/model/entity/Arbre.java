@@ -55,4 +55,8 @@ public class Arbre {
         // Vérifie que la densité des arbres est respectée (100 arbres par hectare)
         return champ.getArbres().size() <= champ.getSuperficie() * 100;
     }
+
+    public int calculerAge() {
+        return LocalDate.now().getYear() - datePlantation.getYear();
+    }
 }

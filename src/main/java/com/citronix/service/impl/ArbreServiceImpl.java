@@ -38,7 +38,7 @@ public class ArbreServiceImpl implements ArbreService {
         arbre.setChamp(champ);
 
         // Calculer et définir l'âge
-        arbre.setAge(0);
+        arbre.setAge(arbre.calculerAge());
         //arbre.setAge(arbre.calculerAge());
 
 
@@ -69,7 +69,7 @@ public class ArbreServiceImpl implements ArbreService {
                 .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé"));
 
         // Calcule et définit l'âge avant de mapper en DTO
-        arbre.setAge(0);
+        arbre.setAge(arbre.calculerAge());
 
         // Retourne le DTO
         return arbreMapper.toDTO(arbre);
