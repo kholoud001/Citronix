@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-
 @Service
 public class ArbreServiceImpl implements ArbreService {
 
@@ -41,6 +39,8 @@ public class ArbreServiceImpl implements ArbreService {
 
         // Calculer et définir l'âge
         arbre.setAge(0);
+        //arbre.setAge(arbre.calculerAge());
+
 
         // Valider la période de plantation
         if (!arbre.estDansLaBonnePeriode()) {
@@ -60,4 +60,20 @@ public class ArbreServiceImpl implements ArbreService {
         arbre = arbreRepository.save(arbre);
 
         return arbreMapper.toDTO(arbre);
-    }}
+    }
+
+    @Override
+    public ArbreDTO getArbre(Long arbreId) {
+        // Récupère l'arbre par son ID
+        Arbre arbre = arbreRepository.findById(arbreId)
+                .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé"));
+
+        // Calcule et définit l'âge avant de mapper en DTO
+        arbre.setAge(0);
+
+        // Retourne le DTO
+        return arbreMapper.toDTO(arbre);
+    }
+
+
+}

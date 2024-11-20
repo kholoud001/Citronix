@@ -22,4 +22,11 @@ public class ArbreController {
         ArbreDTO createdArbre = arbreService.createArbre(champId, arbreDTO);
         return ResponseEntity.ok(createdArbre);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArbreDTO> getArbre(@PathVariable Long id) {
+        // Appelle le service pour obtenir le DTO de l'arbre
+        ArbreDTO arbreDTO = arbreService.getArbre(id);
+        return ResponseEntity.ok(arbreDTO);
+    }
 }
