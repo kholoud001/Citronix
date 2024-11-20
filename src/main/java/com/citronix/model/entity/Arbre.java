@@ -1,5 +1,6 @@
 package com.citronix.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Transient;
+
+
 
 import java.time.LocalDate;
 
@@ -27,6 +30,7 @@ public class Arbre {
 
     @ManyToOne
     @JoinColumn(name = "champ_id", nullable = false)
+    @JsonBackReference
     private Champ champ;
 
     @Transient
@@ -34,5 +38,21 @@ public class Arbre {
         if (age < 3) return 2.5;
         if (age <= 10) return 12.0;
         return 20.0;
+    }
+
+    public boolean estDansLaBonnePeriode() {
+        // Les arbres doivent être plantés entre mars et mai
+        int mois = datePlantation.getMonthValue();
+        return mois >= 3 && mois <= 5;
+    }
+
+    public boolean estProductif() {
+        // Vérifie si l'arbre est productif (moins de 20 ans)
+        return age <= 20;
+    }
+
+    public boolean estDensiteValide() {
+        // Vérifie que la densité des arbres est respectée (100 arbres par hectare)
+        return champ.getArbres().size() <= champ.getSuperficie() * 100;
     }
 }
