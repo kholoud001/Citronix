@@ -1,4 +1,5 @@
 package com.citronix.model.entity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -33,7 +34,7 @@ public class Ferme {
     private LocalDate dateCreation;
 
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Champ> champs = new ArrayList<>();
 
@@ -43,6 +44,7 @@ public class Ferme {
         double totalSuperficieChamps = 0.0;
         for (Champ champ : champs) {
             totalSuperficieChamps += champ.getSuperficie();
+            System.out.println("superficie totale des champs = >"+totalSuperficieChamps);
         }
         return totalSuperficieChamps < this.superficie;
     }
