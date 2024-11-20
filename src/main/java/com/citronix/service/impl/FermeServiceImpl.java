@@ -2,11 +2,13 @@ package com.citronix.service.impl;
 
 import com.citronix.model.entity.Ferme;
 import com.citronix.repository.FermeRepository;
+import com.citronix.repository.specification.FermeSpecification;
 import com.citronix.service.FermeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +51,11 @@ public class FermeServiceImpl implements FermeService {
         } else {
             throw new RuntimeException("Ferme not found");
         }
+    }
+
+    @Override
+    public List<Ferme> searchFerme(String nom, String localisation, Double superficieMin, Double superficieMax) {
+        return fermeRepository.findAll(FermeSpecification.searchFerme(nom, localisation, superficieMin, superficieMax));
     }
 
 }

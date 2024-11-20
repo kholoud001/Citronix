@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -14,5 +19,8 @@ public class FermeDTO {
     private String nom;
     private String localisation;
     private Double superficie;
-    private String dateCreation;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateCreation;
+
+    private List<ChampDTO> champs;
 }
