@@ -1,5 +1,6 @@
 package com.citronix.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
@@ -25,13 +26,15 @@ public class Champ {
     @DecimalMin(value = "0.1", message = "La superficie doit être au minimum de 0.1 hectare.")
     private Double superficie;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "champ", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Arbre> arbres = new ArrayList<>();
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "ferme_id", nullable = false)
     private Ferme ferme;
 
-    @OneToMany(mappedBy = "champ", cascade = CascadeType.ALL)
-    private List<Arbre> arbres = new ArrayList<>();
 
 
     public boolean isDensiteArbresValid() {

@@ -9,8 +9,12 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = ChampMapper.class)
 public interface ArbreMapper {
+
+    @Mapping(source = "champ.id", target = "champId")
     ArbreDTO toDTO(Arbre arbre);
 
+    @Mapping(target = "age", ignore = true) // L'âge est calculé, pas entré par l'utilisateur
+    @Mapping(source = "champId", target = "champ.id")
     Arbre toEntity(ArbreDTO arbreDTO);
 
     List<ArbreDTO> toDTOs(List<Arbre> arbres);

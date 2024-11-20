@@ -63,4 +63,14 @@ public class ChampServiceImpl implements ChampService {
             throw new IllegalStateException("Ferme non trouvée avec l'ID " + fermeId);
         }
     }
+
+    @Override
+    public ChampDTO getChamp(Long champId) {
+        Champ champ = champRepository.findById(champId)
+                .orElseThrow(() -> new IllegalArgumentException("Champ non trouvé"));
+
+        ChampDTO champDTO = champMapper.toDTO(champ);
+
+        return champDTO;
+    }
 }

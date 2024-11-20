@@ -1,13 +1,11 @@
 package com.citronix.controller;
 
 import com.citronix.dto.ChampDTO;
-import com.citronix.mapper.ChampMapper;
 import com.citronix.model.entity.Champ;
-import com.citronix.model.entity.Ferme;
 import com.citronix.service.ChampService;
-import com.citronix.service.FermeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +20,19 @@ public class ChampController {
 
 
     @PostMapping("/{fermeId}")
-    public ResponseEntity<ChampDTO> addChamp(@PathVariable Long fermeId, @RequestBody @Valid ChampDTO champDTO) {
+    public ResponseEntity<ChampDTO> addChamp(@PathVariable Long fermeId,
+                                             @RequestBody @Valid ChampDTO champDTO) {
         ChampDTO createdChamp = champService.createChamp(fermeId, champDTO);
         return ResponseEntity.ok(createdChamp);
+    }
+
+    @GetMapping("/{champId}")
+    public ResponseEntity<ChampDTO> getChamp(@PathVariable Long champId) {
+        try {
+            ChampDTO champDTO = champService.getChamp(champId);
+            return new ResponseEntity<>(champDTO, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 }
