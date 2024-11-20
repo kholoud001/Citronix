@@ -22,7 +22,8 @@ public class Recolte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private Saison saison;
 
     @NotNull
@@ -30,6 +31,10 @@ public class Recolte {
 
     @NotNull
     private Double quantiteTotale;
+
+    @ManyToOne
+    @JoinColumn(name = "champ_id", nullable = false)
+    private Champ champ;
 
     @OneToMany(mappedBy = "recolte", cascade = CascadeType.ALL)
     private List<DetailRecolte> details;

@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Transient;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,6 +34,10 @@ public class Arbre {
     @JsonBackReference
     private Champ champ;
 
+
+    @OneToMany(mappedBy = "arbre", cascade = CascadeType.ALL)
+    private List<DetailRecolte> recoltes;
+
     @Transient
     public double calculerProductivite() {
         if (age < 3) return 2.5;
@@ -40,21 +45,25 @@ public class Arbre {
         return 20.0;
     }
 
+    @Transient
     public boolean estDansLaBonnePeriode() {
         // Les arbres doivent être plantés entre mars et mai
         int mois = datePlantation.getMonthValue();
         return mois >= 3 && mois <= 5;
     }
 
+    @Transient
     public boolean estProductif() {
         // Vérifie si l'arbre est productif (moins de 20 ans)
         return age <= 20;
     }
 
+    @Transient
     public boolean estDensiteValide() {
         // Vérifie que la densité des arbres est respectée (100 arbres par hectare)
         return champ.getArbres().size() <= champ.getSuperficie() * 100;
     }
+
 
     public int calculerAge() {
         return LocalDate.now().getYear() - datePlantation.getYear();

@@ -1,6 +1,7 @@
 package com.citronix.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +18,13 @@ public class DetailRecolte {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "arbre_id", nullable = false)
-    private Arbre arbre;
-
-    @ManyToOne
     @JoinColumn(name = "recolte_id", nullable = false)
     private Recolte recolte;
 
-    private double quantite;
+    @ManyToOne
+    @JoinColumn(name = "arbre_id", nullable = false)
+    private Arbre arbre;
+
+    @NotNull
+    private Double quantiteRecoltee;
 }
