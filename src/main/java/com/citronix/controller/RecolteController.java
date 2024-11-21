@@ -34,4 +34,21 @@ public class RecolteController {
         return recolteService.getRecoltesBySaison(saison);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> supprimerRecolte(@PathVariable Long id) {
+        recolteService.supprimerRecolte(id);
+        return ResponseEntity.ok("Récolte supprimée avec succès !");
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> mettreAJourRecolte(@PathVariable Long id,
+                                                     @RequestParam String saisonStr,
+                                                     @RequestParam LocalDate dateRecolte,
+                                                     @RequestParam List<Long> arbreIds) {
+        RecolteDTO updatedRecolte = recolteService.mettreAJourRecolte(id, saisonStr, dateRecolte, arbreIds);
+        return ResponseEntity.ok("Récolte mise à jour avec succès : " + updatedRecolte);
+    }
+
+
 }

@@ -11,4 +11,8 @@ public interface RecolteService {
     RecolteDTO creerRecolte(Long champId, String saisonStr, LocalDate dateRecolte, List<Long> arbreIds);
 
     List<Recolte> getRecoltesBySaison(Saison saison);
+
+    void supprimerRecolte(Long id);
+
+    RecolteDTO mettreAJourRecolte(Long id, String saisonStr, LocalDate dateRecolte, List<Long> arbreIds);
 }

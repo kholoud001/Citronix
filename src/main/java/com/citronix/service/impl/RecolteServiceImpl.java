@@ -105,4 +105,71 @@ public class RecolteServiceImpl implements RecolteService {
         return recolteRepository.findBySaison(saison);
     }
 
+
+    @Override
+    public void supprimerRecolte(Long id) {
+        Recolte recolte = recolteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Recolte non trouvée avec l'ID : " + id));
+
+        recolteRepository.delete(recolte);
+    }
+
+    @Override
+    public RecolteDTO mettreAJourRecolte(Long id, String saisonStr, LocalDate dateRecolte, List<Long> arbreIds) {
+        // Find existing Recolte
+        Recolte recolte = recolteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Recolte non trouvée avec l'ID : " + id));
+
+        // Update fields
+        Saison saison;
+        try {
+            saison = Saison.valueOf(saisonStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Saison invalide.");
+        }
+
+        // Check if there's another harvest for this champ and saison (if applicable)
+        Champ champ = recolte.getChamp();
+        boolean recolteExistante = recolteRepository.existsByChampAndSaison(champ, saison);
+        if (recolteExistante && !recolte.getSaison().equals(saison)) {
+            throw new IllegalArgumentException("Une récolte existe déjà pour cette saison.");
+        }
+
+        // Update the Recolte's details
+        recolte.setSaison(saison);
+        recolte.setDateRecolte(dateRecolte);
+
+        // Update the details (assuming same arbreIds)
+        recolte.getDetails().clear();  // Clear existing details
+        double quantiteTotale = 0.0;
+
+        for (Long arbreId : arbreIds) {
+            Arbre arbre = arbreRepository.findById(arbreId)
+                    .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé avec l'ID : " + arbreId));
+
+            // Check productivity
+            if (!arbre.estProductif()) {
+                throw new IllegalArgumentException("L'arbre avec l'ID " + arbreId + " n'est pas productif.");
+            }
+
+            double quantite = arbre.calculerProductivite();
+            DetailRecolte detail = DetailRecolte.builder()
+                    .recolte(recolte)
+                    .arbre(arbre)
+                    .quantiteRecoltee(quantite)
+                    .build();
+
+            recolte.getDetails().add(detail);
+            quantiteTotale += quantite;
+        }
+
+        recolte.setQuantiteTotale(quantiteTotale);
+
+        // Save updated Recolte
+        Recolte updatedRecolte = recolteRepository.save(recolte);
+
+        return recolteMapper.toDTO(updatedRecolte);
+    }
+
+
 }
