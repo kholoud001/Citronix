@@ -22,23 +22,11 @@ public class RecolteController {
     private RecolteService recolteService;
 
     @PostMapping
-    public ResponseEntity<RecolteDTO> creerRecolte(
-            @RequestParam Long champId,
-            @RequestParam String saison,
-            @RequestParam String dateRecolte,  // au format "yyyy-MM-dd"
-            @RequestParam List<Long> arbreIds
-    ) {
-        try {
-            // Conversion de la date
-            LocalDate date = LocalDate.parse(dateRecolte);
-
-            // Appel à la méthode du service pour créer la récolte
-            RecolteDTO recolteDTO = recolteService.creerRecolte(champId, saison, date, arbreIds);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(recolteDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    public RecolteDTO creerRecolte(@RequestParam Long champId,
+                                   @RequestParam String saisonStr,
+                                   @RequestParam LocalDate dateRecolte,
+                                   @RequestParam List<Long> arbreIds) {
+        return recolteService.creerRecolte(champId, saisonStr, dateRecolte, arbreIds);
     }
 
     @GetMapping("/saison/{saison}")
