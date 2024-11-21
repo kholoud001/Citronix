@@ -8,4 +8,6 @@ import java.util.List;
 public interface VenteService {
 
     VenteDTO creerVente(VenteDTO venteDTO);
+
+    List<VenteDTO> obtenirVentesParRecolte(Long recolteId);
 }

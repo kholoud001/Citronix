@@ -9,6 +9,9 @@ import com.citronix.service.VenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class VenteServiceImpl implements VenteService {
 
@@ -34,6 +37,25 @@ public class VenteServiceImpl implements VenteService {
         vente = venteRepository.save(vente);
 
         return new VenteDTO(vente.getId(), vente.getClient(), vente.getPrixUnitaire(), vente.getDateVente(), vente.getRecolte().getId());
+    }
+
+    @Override
+    public List<VenteDTO> obtenirVentesParRecolte(Long recolteId) {
+        List<Vente> ventes = venteRepository.findByRecolteId(recolteId);
+
+        List<VenteDTO> venteDTOList = new ArrayList<>();
+
+        for (Vente vente : ventes) {
+            VenteDTO venteDTO = new VenteDTO();
+            venteDTO.setId(vente.getId());
+            venteDTO.setClient(vente.getClient());
+            venteDTO.setPrixUnitaire(vente.getPrixUnitaire());
+            venteDTO.setDateVente(vente.getDateVente());
+            venteDTO.setRecolteId(vente.getRecolte().getId());
+            venteDTOList.add(venteDTO);
+        }
+
+        return venteDTOList;
     }
 
 

@@ -25,5 +25,9 @@ public class VenteController {
     }
 
 
-
+    @GetMapping("/recolte/{recolteId}")
+    public ResponseEntity<List<VenteDTO>> obtenirVentesParRecolte(@PathVariable Long recolteId) {
+        List<VenteDTO> ventes = venteService.obtenirVentesParRecolte(recolteId);
+        return ResponseEntity.ok(ventes);
+    }
 }
