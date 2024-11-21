@@ -8,6 +8,7 @@ import com.citronix.repository.VenteRepository;
 import com.citronix.service.VenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,37 @@ public class VenteServiceImpl implements VenteService {
         }
 
         return venteDTOList;
+    }
+
+
+    @Override
+    public VenteDTO updateVente(Long id, VenteDTO venteDTO) {
+        Vente vente = venteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vente non trouvée"));
+
+        vente.setClient(venteDTO.getClient());
+        vente.setPrixUnitaire(venteDTO.getPrixUnitaire());
+        vente.setDateVente(venteDTO.getDateVente());
+
+        // Associer la récolte
+        // Si nécessaire, vous pouvez récupérer la récolte par ID et l'assigner
+        // vente.setRecolte(recolteRepository.findById(venteDTO.getRecolteId()).orElseThrow(() -> new RuntimeException("Recolte non trouvée")));
+
+        Vente updatedVente = venteRepository.save(vente);
+
+        return new VenteDTO(updatedVente.getId(), updatedVente.getClient(),
+                updatedVente.getPrixUnitaire(), updatedVente.getDateVente(),
+                updatedVente.getRecolte().getId());
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteVente(Long id) {
+        Vente vente = venteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vente non trouvée"));
+
+        venteRepository.delete(vente);
     }
 
 

@@ -30,4 +30,19 @@ public class VenteController {
         List<VenteDTO> ventes = venteService.obtenirVentesParRecolte(recolteId);
         return ResponseEntity.ok(ventes);
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteVente(@PathVariable Long id) {
+        venteService.deleteVente(id);
+        return ResponseEntity.ok("Vente supprimée avec succès !");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VenteDTO> updateVente(@PathVariable Long id, @RequestBody VenteDTO venteDTO) {
+        VenteDTO updatedVente = venteService.updateVente(id, venteDTO);
+        return ResponseEntity.ok(updatedVente);
+    }
+
+
 }

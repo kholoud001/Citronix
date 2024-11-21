@@ -10,4 +10,8 @@ public interface VenteService {
     VenteDTO creerVente(VenteDTO venteDTO);
 
     List<VenteDTO> obtenirVentesParRecolte(Long recolteId);
+
+    VenteDTO updateVente(Long id, VenteDTO venteDTO);
+
+    void deleteVente(Long id);
 }
