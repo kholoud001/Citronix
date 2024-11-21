@@ -40,6 +40,15 @@ public class FermeServiceImpl implements FermeService {
     }
 
     @Override
+    public void supprimerFermeParId(Long id) {
+        Ferme ferme = fermeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ferme non trouvée"));
+        fermeRepository.delete(ferme);
+    }
+
+
+
+    @Override
     public Ferme updateFerme(Long id, Ferme ferme) {
         Optional<Ferme> optionalFerme = fermeRepository.findById(id);
 

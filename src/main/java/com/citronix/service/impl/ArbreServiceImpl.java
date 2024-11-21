@@ -20,44 +20,33 @@ public class ArbreServiceImpl implements ArbreService {
     @Autowired
     private ChampRepository champRepository;
 
-
     @Autowired
     private ArbreMapper arbreMapper;
 
     @Override
     @Transactional
     public ArbreDTO createArbre(Long champId, ArbreDTO arbreDTO) {
-        // Récupérer le champ
         Champ champ = champRepository.findById(champId)
                 .orElseThrow(() -> new IllegalArgumentException("Champ non trouvé"));
 
-        // Mapper le DTO vers l'entité
         Arbre arbre = arbreMapper.toEntity(arbreDTO);
 
-        // Définir le champ
         arbre.setChamp(champ);
 
-        // Calculer et définir l'âge
         arbre.setAge(arbre.calculerAge());
-        //arbre.setAge(arbre.calculerAge());
 
-
-        // Valider la période de plantation
         if (!arbre.estDansLaBonnePeriode()) {
             throw new IllegalArgumentException("L'arbre doit être planté entre mars et mai.");
         }
 
-        // Valider la densité
         if (!arbre.estDensiteValide()) {
             throw new IllegalArgumentException("La densité des arbres dépasse la limite autorisée.");
         }
-
 
         if (!arbre.estProductif()) {
             throw new IllegalArgumentException("Cet arbre a dépassé sa durée de vie maximale (20 ans).");
         }
 
-        // Ajouter l'arbre au champ
         champ.getArbres().add(arbre);
 
 //        champRepository.save(champ);
@@ -67,14 +56,56 @@ public class ArbreServiceImpl implements ArbreService {
     }
 
     @Override
+    @Transactional
     public ArbreDTO getArbre(Long arbreId) {
         Arbre arbre = arbreRepository.findById(arbreId)
                 .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé"));
 
         arbre.setAge(arbre.calculerAge());
-
         return arbreMapper.toDTO(arbre);
     }
+
+    @Transactional
+    @Override
+    public void deleteArbre(Long arbreId) {
+        Arbre arbre = arbreRepository.findById(arbreId)
+                .orElseThrow(() -> new IllegalArgumentException("Arbre non trouvé"));
+
+        arbreRepository.delete(arbre);
+        arbreRepository.flush();
+    }
+
+    @Transactional
+    @Override
+    public ArbreDTO updateArbre(Long arbreId, ArbreDTO arbreDTO) {
+        Arbre arbre = arbreRepository.findById(arbreId)
+                .orElseThrow(() -> new IllegalArgumentException("Arbre not found"));
+
+        arbre.setDatePlantation(arbreDTO.getDatePlantation());
+        arbre.setAge(arbre.calculerAge());
+
+        if (!arbre.estDansLaBonnePeriode()) {
+            throw new IllegalArgumentException("L'arbre doit être planté entre mars et mai.");
+        }
+
+         Champ champ = champRepository.findById(arbreDTO.getChampId())
+                .orElseThrow(() -> new IllegalArgumentException("Champ not found"));
+        arbre.setChamp(champ);
+
+        arbreRepository.save(arbre);
+
+        ArbreDTO updatedArbreDTO = arbreMapper.toDTO(arbre);
+
+        updatedArbreDTO.setDansLaBonnePeriode(arbre.estDansLaBonnePeriode());
+
+        return updatedArbreDTO;
+    }
+
+
+
+
+
+
 
 
 }

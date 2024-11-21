@@ -73,4 +73,33 @@ public class ChampServiceImpl implements ChampService {
 
         return champDTO;
     }
+
+    @Override
+    public void deleteChamp(Long champId) {
+        if (!champRepository.existsById(champId)) {
+            throw new IllegalArgumentException("Le champ avec l'ID " + champId + " n'existe pas.");
+        }
+        champRepository.deleteById(champId);
+    }
+
+    @Override
+    public ChampDTO updateChamp(Long champId, ChampDTO champDTO) {
+        Champ existingChamp = champRepository.findById(champId)
+                .orElseThrow(() -> new IllegalArgumentException("Champ non trouvé avec l'ID " + champId));
+
+        // Vérifiez les contraintes ici (par exemple, superficie minimale, maximale, etc.)
+        if (champDTO.getSuperficie() < 0.1) {
+            throw new IllegalStateException("La superficie minimale d'un champ est de 0.1 hectare.");
+        }
+
+        existingChamp.setSuperficie(champDTO.getSuperficie());
+
+        // Sauvegarde l'entité mise à jour
+        Champ updatedChamp = champRepository.save(existingChamp);
+
+        // Retourne l'entité mise à jour en tant que DTO
+        return champMapper.toDTO(updatedChamp);
+    }
+
+
 }

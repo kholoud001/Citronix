@@ -12,6 +12,9 @@ public interface FermeService {
 
     Optional<Ferme> getFermeById(Long id);
 
+
+    void supprimerFermeParId(Long id);
+
     Ferme updateFerme(Long id, Ferme ferme);
 
     List<Ferme> searchFerme(String nom, String localisation, Double superficieMin, Double superficieMax);

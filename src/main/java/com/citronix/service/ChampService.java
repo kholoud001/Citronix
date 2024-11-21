@@ -7,4 +7,8 @@ public interface ChampService {
     ChampDTO createChamp(Long fermeId, ChampDTO champDTO);
 
     ChampDTO getChamp(Long champId);
+
+    void deleteChamp(Long champId);
+
+    ChampDTO updateChamp(Long champId, ChampDTO champDTO);
 }

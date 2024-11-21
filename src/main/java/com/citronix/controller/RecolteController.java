@@ -1,6 +1,8 @@
 package com.citronix.controller;
 
 import com.citronix.dto.RecolteDTO;
+import com.citronix.model.entity.Recolte;
+import com.citronix.model.enums.Saison;
 import com.citronix.service.RecolteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,11 @@ public class RecolteController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+    }
+
+    @GetMapping("/saison/{saison}")
+    public List<Recolte> getRecoltesBySaison(@PathVariable Saison saison) {
+        return recolteService.getRecoltesBySaison(saison);
     }
 
 }
