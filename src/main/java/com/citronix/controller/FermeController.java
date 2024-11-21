@@ -6,6 +6,7 @@ import com.citronix.model.entity.Ferme;
 import com.citronix.service.FermeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +68,20 @@ public class FermeController {
 
         return ResponseEntity.ok(fermeDTOs);
     }
+
+    @DeleteMapping("/supprime/{id}")
+    public ResponseEntity<String> deleteFermeById(@PathVariable Long id) {
+        try {
+            fermeService.supprimerFermeParId(id);
+            return ResponseEntity.ok("Ferme supprimée avec succès !");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne lors de la suppression.");
+        }
+    }
+
+
 
 
 }

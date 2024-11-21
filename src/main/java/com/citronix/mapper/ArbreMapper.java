@@ -6,15 +6,16 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-
-@Mapper(componentModel = "spring", uses = ChampMapper.class)
+@Mapper(componentModel = "spring", uses = {ChampMapper.class, DetailRecolteMapper.class})
 public interface ArbreMapper {
 
     @Mapping(source = "champ.id", target = "champId")
+    //@Mapping(target = "details", ignore = true)
     ArbreDTO toDTO(Arbre arbre);
 
-    @Mapping(target = "age", ignore = true) // L'âge est calculé, pas entré par l'utilisateur
+    @Mapping(target = "age", ignore = true)
     @Mapping(source = "champId", target = "champ.id")
+    //@Mapping(target = "details", ignore = true)
     Arbre toEntity(ArbreDTO arbreDTO);
 
     List<ArbreDTO> toDTOs(List<Arbre> arbres);

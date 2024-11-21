@@ -1,5 +1,7 @@
 package com.citronix.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ public class DetailRecolte {
 
     @ManyToOne
     @JoinColumn(name = "recolte_id", nullable = false)
+    @JsonBackReference
     private Recolte recolte;
 
     @ManyToOne
@@ -27,4 +30,7 @@ public class DetailRecolte {
 
     @NotNull
     private Double quantiteRecoltee;
+
+
+
 }

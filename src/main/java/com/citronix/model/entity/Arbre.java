@@ -1,8 +1,10 @@
 package com.citronix.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,7 @@ import org.springframework.data.annotation.Transient;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +28,7 @@ public class Arbre {
     private Long id;
 
     @NotNull
+    @PastOrPresent(message="la date de plantation ne doit pas être dans le future")
     private LocalDate datePlantation;
 
     private int age;
@@ -35,8 +39,11 @@ public class Arbre {
     private Champ champ;
 
 
-    @OneToMany(mappedBy = "arbre", cascade = CascadeType.ALL)
-    private List<DetailRecolte> recoltes;
+    @OneToMany(mappedBy = "arbre", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<DetailRecolte> details=  new ArrayList<>();
+
+
 
     @Transient
     public double calculerProductivite() {

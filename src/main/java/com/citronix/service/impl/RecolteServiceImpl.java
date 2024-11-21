@@ -100,4 +100,9 @@ public class RecolteServiceImpl implements RecolteService {
         return recolteMapper.toDTO(savedRecolte);
     }
 
+    @Override
+    public List<Recolte> getRecoltesBySaison(Saison saison) {
+        return recolteRepository.findBySaison(saison);
+    }
+
 }
