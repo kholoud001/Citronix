@@ -36,7 +36,7 @@ public class Recolte {
     @JoinColumn(name = "champ_id", nullable = false)
     private Champ champ;
 
-    @OneToMany(mappedBy = "recolte", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recolte", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<DetailRecolte> details;
 
 
