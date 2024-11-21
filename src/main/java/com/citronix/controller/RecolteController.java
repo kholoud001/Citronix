@@ -1,5 +1,6 @@
 package com.citronix.controller;
 
+import com.citronix.dto.DetailRecolteDTO;
 import com.citronix.dto.RecolteDTO;
 import com.citronix.model.entity.Recolte;
 import com.citronix.model.enums.Saison;
@@ -48,6 +49,11 @@ public class RecolteController {
                                                      @RequestParam List<Long> arbreIds) {
         RecolteDTO updatedRecolte = recolteService.mettreAJourRecolte(id, saisonStr, dateRecolte, arbreIds);
         return ResponseEntity.ok("Récolte mise à jour avec succès : " + updatedRecolte);
+    }
+
+    @GetMapping("/quantité/{recolteId}")
+    public List<DetailRecolteDTO> getDetailsByRecolte(@PathVariable Long recolteId) {
+        return recolteService.getDetailsByRecolteId(recolteId);
     }
 
 

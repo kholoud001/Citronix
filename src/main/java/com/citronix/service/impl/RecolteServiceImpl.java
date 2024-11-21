@@ -1,5 +1,6 @@
 package com.citronix.service.impl;
 
+import com.citronix.dto.DetailRecolteDTO;
 import com.citronix.dto.RecolteDTO;
 import com.citronix.mapper.RecolteMapper;
 import com.citronix.model.entity.Arbre;
@@ -9,10 +10,13 @@ import com.citronix.model.entity.Recolte;
 import com.citronix.model.enums.Saison;
 import com.citronix.repository.ArbreRepository;
 import com.citronix.repository.ChampRepository;
+import com.citronix.repository.DetailRecolteRepository;
 import com.citronix.repository.RecolteRepository;
 import com.citronix.service.RecolteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +33,10 @@ public class RecolteServiceImpl implements RecolteService {
 
     @Autowired
     private  ChampRepository champRepository;
+
+    @Autowired
+    private DetailRecolteRepository detailRecolteRepository;
+
 
     @Autowired
     private RecolteMapper recolteMapper;
@@ -169,6 +177,21 @@ public class RecolteServiceImpl implements RecolteService {
         Recolte updatedRecolte = recolteRepository.save(recolte);
 
         return recolteMapper.toDTO(updatedRecolte);
+    }
+
+
+    @Override
+    public List<DetailRecolteDTO> getDetailsByRecolteId(Long recolteId) {
+        List<DetailRecolte> details = detailRecolteRepository.findByRecolteId(recolteId);
+
+        return details.stream()
+                .map(detail -> DetailRecolteDTO.builder()
+                        .id(detail.getId())
+                        .arbreId(detail.getArbre().getId())
+                        .recolteId(detail.getRecolte().getId())
+                        .quantite(detail.getQuantiteRecoltee())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
