@@ -1,5 +1,6 @@
 package com.citronix.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,7 @@ public class Vente {
 
     @ManyToOne
     @JoinColumn(name = "recolte_id", nullable = false)
+    @JsonBackReference
     private Recolte recolte;
 
     @Transient
