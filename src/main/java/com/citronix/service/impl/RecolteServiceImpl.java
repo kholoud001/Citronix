@@ -40,11 +40,9 @@ public class RecolteServiceImpl implements RecolteService {
 
     @Override
     public RecolteDTO creerRecolte(Long champId, String saisonStr, LocalDate dateRecolte, List<Long> arbreIds) {
-        // Vérification du champ
         Champ champ = champRepository.findById(champId)
                 .orElseThrow(() -> new IllegalArgumentException("Champ non trouvé avec l'ID : " + champId));
 
-        // Conversion de la chaîne en enum Saison
         Saison saison;
         try {
             saison = Saison.valueOf(saisonStr.toUpperCase());
@@ -52,7 +50,6 @@ public class RecolteServiceImpl implements RecolteService {
             throw new IllegalArgumentException("Saison invalide. Les saisons valides sont : PRINTEMPS, ETE, AUTOMNE, HIVER.");
         }
 
-        // Vérification si une récolte existe déjà pour cette saison et ce champ
         boolean recolteExistante = recolteRepository.existsByChampAndSaison(champ, saison);
         if (recolteExistante) {
             throw new IllegalArgumentException("Une récolte existe déjà pour la saison " + saison + " dans ce champ.");
@@ -64,7 +61,7 @@ public class RecolteServiceImpl implements RecolteService {
                 .dateRecolte(dateRecolte)
                 .champ(champ)
                 .quantiteTotale(0.0)
-                .details(new ArrayList<>()) // initialisation de la liste des détails
+                .details(new ArrayList<>())
                 .build();
 
         // Calcul de la quantité totale et ajout des détails
@@ -80,13 +77,11 @@ public class RecolteServiceImpl implements RecolteService {
                 throw new IllegalArgumentException("L'arbre avec l'ID " + arbreId + " n'est pas productif et ne peut pas être inclus.");
             }
 
-            // Calcul de la productivité de l'arbre
             double quantite = arbre.calculerProductivite();
 
-            // Création du détail de récolte
             DetailRecolte detail = DetailRecolte.builder()
                     .recolte(recolte) // Lier le détail à la récolte
-                    .arbre(arbre) // Lier le détail à l'arbre
+                    .arbre(arbre)
                     .quantiteRecoltee(quantite)
                     .build();
 
@@ -95,13 +90,10 @@ public class RecolteServiceImpl implements RecolteService {
             quantiteTotale += quantite;
         }
 
-        // Mise à jour de la quantité totale de la récolte
         recolte.setQuantiteTotale(quantiteTotale);
 
-        // Enregistrer la récolte dans la base de données et retourner le DTO
         Recolte savedRecolte = recolteRepository.save(recolte);
 
-        // Retourner le DTO de la récolte enregistrée
         return recolteMapper.toDTO(savedRecolte);
     }
 

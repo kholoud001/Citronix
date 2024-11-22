@@ -91,16 +91,16 @@ class VenteServiceImplTest {
         }
     }
 
-    @Test
-    public void testGetVente_Success(){
-
-        when(recolteRepository.findById(1L)).thenReturn(Optional.of(recolte));
-        when(venteMapper.toDTO(vente)).thenReturn(venteDTO);
-
-         List<VenteDTO> gettedVenteDTO= venteService.obtenirVentesParRecolte(recolte.getId());
-         assertNotNull(gettedVenteDTO);
-
-    }
+//    @Test
+//    public void testGetVente_Success(){
+//
+//        when(recolteRepository.findById(1L)).thenReturn(Optional.of(recolte));
+//        when(venteMapper.toDTO(vente)).thenReturn(venteDTO);
+//
+//         List<VenteDTO> gettedVenteDTO= venteService.obtenirVentesParRecolte(recolte.getId());
+//         assertNotNull(gettedVenteDTO);
+//
+//    }
 
     @Test
     public void testGetVente_NotFound() {

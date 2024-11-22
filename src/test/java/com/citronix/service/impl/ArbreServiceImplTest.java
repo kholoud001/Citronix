@@ -1,4 +1,4 @@
-package com.citronix.service;
+package com.citronix.service.impl;
 
 import com.citronix.dto.ArbreDTO;
 import com.citronix.mapper.ArbreMapper;
@@ -6,8 +6,6 @@ import com.citronix.model.entity.Arbre;
 import com.citronix.model.entity.Champ;
 import com.citronix.repository.ArbreRepository;
 import com.citronix.repository.ChampRepository;
-import com.citronix.service.impl.ArbreServiceImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
