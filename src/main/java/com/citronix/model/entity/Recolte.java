@@ -4,6 +4,7 @@ import com.citronix.model.enums.Saison;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class Recolte {
     private LocalDate dateRecolte;
 
     @NotNull
+    @PastOrPresent(message="la date de r2colte ne doit pas être dans le future")
     private Double quantiteTotale;
 
     @ManyToOne
