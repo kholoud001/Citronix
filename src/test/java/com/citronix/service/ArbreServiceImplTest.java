@@ -79,7 +79,6 @@ class ArbreServiceImplTest {
 
         try {
             arbreService.createArbre(1L, arbreDTO);
-
             fail("Expected IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException e) {
             assertEquals("Champ non trouvé", e.getMessage());

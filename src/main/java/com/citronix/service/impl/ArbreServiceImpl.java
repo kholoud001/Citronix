@@ -7,20 +7,19 @@ import com.citronix.model.entity.Champ;
 import com.citronix.repository.ArbreRepository;
 import com.citronix.repository.ChampRepository;
 import com.citronix.service.ArbreService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class ArbreServiceImpl implements ArbreService {
 
-    @Autowired
     private ArbreRepository arbreRepository;
 
-    @Autowired
     private ChampRepository champRepository;
 
-    @Autowired
     private ArbreMapper arbreMapper;
 
     @Override

@@ -7,27 +7,25 @@ import com.citronix.model.entity.Ferme;
 import com.citronix.repository.ChampRepository;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.ChampService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ChampServiceImpl implements ChampService {
 
-    @Autowired
     private ChampRepository champRepository;
 
-    @Autowired
     private FermeRepository fermeRepository;
 
-
-    @Autowired
     private ChampMapper champMapper;
 
 
     @Override
-    public ChampDTO createChamp( long fermeId, ChampDTO champDTO) {
+    public ChampDTO createChamp(long fermeId, ChampDTO champDTO) {
         Optional<Ferme> fermeOptional = fermeRepository.findById(fermeId);
 
         if (fermeOptional.isPresent()) {
