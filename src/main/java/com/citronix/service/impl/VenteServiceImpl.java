@@ -28,6 +28,7 @@ public class VenteServiceImpl implements VenteService {
         Recolte recolte = recolteRepository.findById(venteDTO.getRecolteId())
                 .orElseThrow(() -> new RuntimeException("Récolte non trouvée"));
 
+        // Création de la vente à partir du DTO
         Vente vente = Vente.builder()
                 .client(venteDTO.getClient())
                 .prixUnitaire(venteDTO.getPrixUnitaire())
@@ -35,10 +36,18 @@ public class VenteServiceImpl implements VenteService {
                 .recolte(recolte)
                 .build();
 
+        // Sauvegarde de la vente
         vente = venteRepository.save(vente);
 
-        return new VenteDTO(vente.getId(), vente.getClient(), vente.getPrixUnitaire(), vente.getDateVente(), vente.getRecolte().getId());
+        // Calcul du revenu en utilisant la méthode calculerRevenu
+        Double revenu = vente.calculerRevenu();
+
+        // Retourner un DTO avec le revenu calculé
+        return new VenteDTO(vente.getId(), vente.getClient(), vente.getPrixUnitaire(), vente.getDateVente(), vente.getRecolte().getId(), revenu);
     }
+
+
+
 
     @Override
     public List<VenteDTO> obtenirVentesParRecolte(Long recolteId) {
@@ -47,17 +56,21 @@ public class VenteServiceImpl implements VenteService {
         List<VenteDTO> venteDTOList = new ArrayList<>();
 
         for (Vente vente : ventes) {
+            Double revenu = vente.calculerRevenu();
+
             VenteDTO venteDTO = new VenteDTO();
             venteDTO.setId(vente.getId());
             venteDTO.setClient(vente.getClient());
             venteDTO.setPrixUnitaire(vente.getPrixUnitaire());
             venteDTO.setDateVente(vente.getDateVente());
             venteDTO.setRecolteId(vente.getRecolte().getId());
+            venteDTO.setRevenu(revenu);
             venteDTOList.add(venteDTO);
         }
 
         return venteDTOList;
     }
+
 
 
     @Override
@@ -74,10 +87,12 @@ public class VenteServiceImpl implements VenteService {
         // vente.setRecolte(recolteRepository.findById(venteDTO.getRecolteId()).orElseThrow(() -> new RuntimeException("Recolte non trouvée")));
 
         Vente updatedVente = venteRepository.save(vente);
+        Double revenu = updatedVente.calculerRevenu();
+
 
         return new VenteDTO(updatedVente.getId(), updatedVente.getClient(),
                 updatedVente.getPrixUnitaire(), updatedVente.getDateVente(),
-                updatedVente.getRecolte().getId());
+                updatedVente.getRecolte().getId(), revenu);
     }
 
 
