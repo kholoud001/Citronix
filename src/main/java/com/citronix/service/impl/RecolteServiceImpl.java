@@ -13,6 +13,7 @@ import com.citronix.repository.ChampRepository;
 import com.citronix.repository.DetailRecolteRepository;
 import com.citronix.repository.RecolteRepository;
 import com.citronix.service.RecolteService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
@@ -23,23 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class RecolteServiceImpl implements RecolteService {
 
-    @Autowired
     private  RecolteRepository recolteRepository;
 
-    @Autowired
     private  ArbreRepository arbreRepository;
 
-    @Autowired
     private  ChampRepository champRepository;
 
-    @Autowired
     private DetailRecolteRepository detailRecolteRepository;
 
-
-    @Autowired
     private RecolteMapper recolteMapper;
+
 
     @Override
     public RecolteDTO creerRecolte(Long champId, String saisonStr, LocalDate dateRecolte, List<Long> arbreIds) {

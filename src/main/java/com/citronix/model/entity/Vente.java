@@ -37,6 +37,9 @@ public class Vente {
 
     @Transient
     public Double calculerRevenu() {
-        return prixUnitaire * recolte.getQuantiteTotale();
+        if (recolte != null && recolte.getQuantiteTotale() != null) {
+            return prixUnitaire * recolte.getQuantiteTotale();
+        }
+        return 0.0;
     }
 }

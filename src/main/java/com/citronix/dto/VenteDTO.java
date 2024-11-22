@@ -13,5 +13,5 @@ public class VenteDTO {
     private Double prixUnitaire;
     private LocalDate dateVente;
     private Long recolteId;
-//    private Double revenu;
+    private Double revenu;
 }

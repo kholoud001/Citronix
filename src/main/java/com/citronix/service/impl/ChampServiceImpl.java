@@ -27,7 +27,7 @@ public class ChampServiceImpl implements ChampService {
 
 
     @Override
-    public ChampDTO createChamp(Long fermeId, ChampDTO champDTO) {
+    public ChampDTO createChamp( long fermeId, ChampDTO champDTO) {
         Optional<Ferme> fermeOptional = fermeRepository.findById(fermeId);
 
         if (fermeOptional.isPresent()) {

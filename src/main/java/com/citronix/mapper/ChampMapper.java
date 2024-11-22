@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = FermeMapper.class)
 public interface ChampMapper {
-    @Mapping(source = "ferme.id", target = "fermeId")
+    //@Mapping(source = "ferme.id", target = "fermeId")
 
     ChampDTO toDTO(Champ champ);
 
