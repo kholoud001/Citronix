@@ -33,12 +33,10 @@ public class ChampServiceImpl implements ChampService {
         if (fermeOptional.isPresent()) {
             Ferme ferme = fermeOptional.get();
 
-            // Validate the number of fields (maximum 10)
             if (ferme.getChamps().size() >= 10) {
                 throw new IllegalStateException("La ferme ne peut contenir plus de 10 champs.");
             }
 
-            // Validate the total surface area of the fields (maximum 50% of the farm's total surface area)
             double totalFieldArea = ferme.getChamps().stream()
                     .mapToDouble(Champ::getSuperficie)
                     .sum();
@@ -47,17 +45,14 @@ public class ChampServiceImpl implements ChampService {
                 throw new IllegalStateException("La superficie totale des champs ne peut pas dépasser 50% de la superficie de la ferme.");
             }
 
-            // Validate the minimum and maximum surface area of the field
             if (champDTO.getSuperficie() < 0.1) {
                 throw new IllegalStateException("La superficie minimale d'un champ est de 0.1 hectare.");
             }
 
-            // Create the Champ entity from the DTO
             Champ champ = champMapper.toEntity(champDTO);
             champ.setFerme(ferme);
             Champ savedChamp = champRepository.save(champ);
 
-            // Return the saved Champ as DTO
             return champMapper.toDTO(savedChamp);
         } else {
             throw new IllegalStateException("Ferme non trouvée avec l'ID " + fermeId);
@@ -94,10 +89,8 @@ public class ChampServiceImpl implements ChampService {
 
         existingChamp.setSuperficie(champDTO.getSuperficie());
 
-        // Sauvegarde l'entité mise à jour
         Champ updatedChamp = champRepository.save(existingChamp);
 
-        // Retourne l'entité mise à jour en tant que DTO
         return champMapper.toDTO(updatedChamp);
     }
 
