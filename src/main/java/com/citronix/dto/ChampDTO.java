@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class ChampDTO {
     private Long id;
     private Double superficie;
-    private Long fermeId;
+    //private Long fermeId;
 }
