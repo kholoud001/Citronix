@@ -6,10 +6,12 @@ import com.citronix.model.entity.Ferme;
 import com.citronix.service.FermeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,58 +20,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/fermes")
 public class FermeController {
+
     @Autowired
     private FermeService fermeService;
 
-    @Autowired
-    private FermeMapper fermeMapper;
-
     @PostMapping
     public ResponseEntity<FermeDTO> createFerme(@Valid @RequestBody FermeDTO fermeDTO) {
-        if (fermeDTO.getChamps() == null) {
-            fermeDTO.setChamps(new ArrayList<>());
-        }
-        Ferme ferme = fermeMapper.toEntity(fermeDTO);
-        Ferme createdFerme = fermeService.createFerme(ferme);
-        return ResponseEntity.status(201).body(fermeMapper.toDTO(createdFerme));
+        FermeDTO createdFerme = fermeService.createFerme(fermeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdFerme);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<FermeDTO> getFerme(@PathVariable Long id) {
-        Ferme ferme = fermeService.getFermeById(id)
-                .orElseThrow(() -> new RuntimeException("Ferme not found"));
-        FermeDTO fermeDTO = fermeMapper.toDTO(ferme);
-        return ResponseEntity.ok(fermeDTO);
+        return fermeService.getFermeById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<FermeDTO> updateFerme(
             @PathVariable Long id,
             @Valid @RequestBody FermeDTO fermeDTO
     ) {
-        Ferme ferme = fermeMapper.toEntity(fermeDTO);
-        Ferme updatedFerme = fermeService.updateFerme(id, ferme);
-        FermeDTO updatedFermeDTO = fermeMapper.toDTO(updatedFerme);
-        return ResponseEntity.ok(updatedFermeDTO);
+        FermeDTO updatedFerme = fermeService.updateFerme(id, fermeDTO);
+        return ResponseEntity.ok(updatedFerme);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<FermeDTO>> searchFerme(
-            @RequestParam(required = false) String nom,
-            @RequestParam(required = false) String localisation,
-            @RequestParam(required = false) Double superficieMin,
-            @RequestParam(required = false) Double superficieMax
-    ) {
-        List<Ferme> fermes = fermeService.searchFerme(nom, localisation, superficieMin, superficieMax);
-
-        List<FermeDTO> fermeDTOs = fermeMapper.toDTOs(fermes);
-
-        return ResponseEntity.ok(fermeDTOs);
-    }
-
-    @DeleteMapping("/supprime/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFermeById(@PathVariable Long id) {
         try {
             fermeService.supprimerFermeParId(id);
@@ -81,7 +58,36 @@ public class FermeController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<FermeDTO>> getAllFermes() {
+        List<FermeDTO> fermes = fermeService.getAllFermes();
+        return ResponseEntity.ok(fermes);
+    }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchFermes(
+            @RequestParam(required = false) String nom,
+            @RequestParam(required = false) String localisation,
+            @RequestParam(required = false) Double superficie,
+            @RequestParam(required = false) String dateCreation
+    ) {
+        LocalDate parsedDate = null;
+        if (dateCreation != null && !dateCreation.isBlank()) {
+            try {
+                parsedDate = LocalDate.parse(dateCreation);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Date invalide. Utilisez le format 'YYYY-MM-DD'.");
+            }
+        }
 
+        List<FermeDTO> result = fermeService.searchFerme(nom, localisation, superficie, parsedDate);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Aucune ferme ne correspond aux critères de recherche.");
+        }
+
+        return ResponseEntity.ok(result);
+    }
 
 }
