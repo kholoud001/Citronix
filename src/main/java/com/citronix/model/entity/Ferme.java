@@ -20,7 +20,7 @@ public class Ferme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message="entrez un nom")
     @Size(max = 100)
     private String nom;
 

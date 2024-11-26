@@ -6,6 +6,7 @@ import com.citronix.model.entity.Ferme;
 import com.citronix.service.FermeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,15 @@ public class FermeController {
     @GetMapping
     public ResponseEntity<List<FermeDTO>> getAllFermes() {
         List<FermeDTO> fermes = fermeService.getAllFermes();
+        return ResponseEntity.ok(fermes);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<Page<FermeDTO>> getAllFermesPages(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        Page<FermeDTO> fermes = fermeService.getAllFermesWithPages(page, size);
         return ResponseEntity.ok(fermes);
     }
 

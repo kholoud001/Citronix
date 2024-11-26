@@ -6,10 +6,14 @@ import com.citronix.model.entity.Ferme;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.FermeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -25,6 +29,10 @@ public class FermeServiceImpl implements FermeService {
     @Override
     public FermeDTO createFerme(FermeDTO fermeDTO) {
         Ferme ferme = fermeMapper.toEntity(fermeDTO);
+
+        if (ferme.getChamps() == null) {
+            ferme.setChamps(new ArrayList<>());
+        }
 
         if (!ferme.isSuperficieValid()) {
             throw new IllegalArgumentException("La superficie totale des champs dépasse la superficie de la ferme.");
@@ -74,6 +82,14 @@ public class FermeServiceImpl implements FermeService {
     public List<FermeDTO> getAllFermes() {
         return fermeMapper.toDTOs(fermeRepository.findAll());
     }
+
+    @Override
+    public Page<FermeDTO> getAllFermesWithPages(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Ferme> fermesPage = fermeRepository.findAll(pageable);
+        return fermesPage.map(fermeMapper::toDTO);
+    }
+
 
     @Override
     public List<FermeDTO> searchFerme(String nom, String localisation, Double superficie, LocalDate dateCreation) {

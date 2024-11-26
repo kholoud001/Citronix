@@ -2,6 +2,7 @@ package com.citronix.service;
 
 import com.citronix.dto.FermeDTO;
 import com.citronix.model.entity.Ferme;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -24,6 +25,8 @@ public interface FermeService {
 
     List<FermeDTO> getAllFermes();
 
+
+    Page<FermeDTO> getAllFermesWithPages(int page, int size);
 
     List<FermeDTO> searchFerme(String name, String localisation, Double superficie, LocalDate dateCreation);
 }
