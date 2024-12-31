@@ -77,7 +77,7 @@
 
 Le diagramme ci-dessous représente les entités principales et leurs relations dans le projet Citronix.
 
-![Diagramme UML](uml_classes.png)
+![Diagramme UML](uml_classes1.png)
 
 Les classes principales comprennent :
 - **Ferme (Farm)** : Représente une unité de gestion agricole.
